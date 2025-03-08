@@ -11,15 +11,13 @@ const MessageInput = () => {
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (!file.type.startsWith("image/")) {
+    if (!file?.type.startsWith("image/")) {
       toast.error("Please select an image file");
       return;
     }
 
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result);
-    };
+    reader.onloadend = () => setImagePreview(reader.result);
     reader.readAsDataURL(file);
   };
 
@@ -38,7 +36,6 @@ const MessageInput = () => {
         image: imagePreview,
       });
 
-      // Clear form
       setText("");
       setImagePreview(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -71,6 +68,7 @@ const MessageInput = () => {
 
       <form onSubmit={handleSendMessage} className="flex items-center gap-2">
         <div className="flex-1 flex gap-2">
+          {/* Text Input */}
           <input
             type="text"
             className="w-full input input-bordered rounded-lg input-sm sm:input-md"
@@ -78,6 +76,8 @@ const MessageInput = () => {
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
+
+          {/* File Upload Input */}
           <input
             type="file"
             accept="image/*"
@@ -86,15 +86,18 @@ const MessageInput = () => {
             onChange={handleImageChange}
           />
 
+          {/* Image Upload Button - Now Visible on Mobile Too */}
           <button
             type="button"
-            className={`hidden sm:flex btn btn-circle
+            className={`flex btn btn-circle 
                      ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
             onClick={() => fileInputRef.current?.click()}
           >
             <Image size={20} />
           </button>
         </div>
+
+        {/* Send Button */}
         <button
           type="submit"
           className="btn btn-sm btn-circle"
@@ -106,4 +109,5 @@ const MessageInput = () => {
     </div>
   );
 };
+
 export default MessageInput;
